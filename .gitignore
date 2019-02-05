@@ -2,3 +2,4 @@
 *.retry
 *.old
 vault.yml
+.idea
