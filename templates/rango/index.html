@@ -8,7 +8,7 @@
 <h1>Rango</h1>
 
 {% if categories %}
-<h3>Categories</h3>
+<h3>Most viewed categories</h3>
 <ul>
     {% for category in categories %}
     <!-- Following line changed to add an HTML hyperlink -->
@@ -20,7 +20,7 @@
 {% endif %}
 
 {% if pages %}
-<h3>Page Top 5</h3>
+<h3>Most viewed pages</h3>
 
 <ul>
     {% for page in pages %}
@@ -30,6 +30,8 @@
 {% else %}
 <strong>There are no pages present.</strong>
 {% endif %}
+<br>
+<a href="/rango/add_category/">Add a New Category</a>
 
 </body>
 </html>
