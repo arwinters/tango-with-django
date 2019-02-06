@@ -14,21 +14,26 @@ from rango.models import Category, Page
 #     return HttpResponse("Tony says hello! <p><a href='/rango/about'>About Page</a>")
 
 def index(request):
-    # Request the context of the request.
-    # The context contains information such as the client's machine details, for example.
+    # Obtain the context from the HTTP request.
     context = RequestContext(request)
 
-    # Query the database for a list of ALL categories currently stored.
-    # Order the categories by no. likes in descending order.
-    # Retrieve the top 5 only - or all if less than 5.
-    # Place the list in our context_dict dictionary which will be passed to the template engine.
+    # Query for categories - add the list to our context dictionary.
     category_list = Category.objects.order_by('-likes')[:5]
-    context_dict = {'categories': category_list}
+    page_list = Page.objects.order_by('-views')[:5]
+    context_dict = {'categories': category_list, 'pages': page_list}
 
-    # Return a rendered response to send to the client.
-    # We make use of the shortcut function to make our lives easier.
-    # Note that the first parameter is the template we wish to use.
+    # The following two lines are new.
+    # We loop through each category returned, and create a URL attribute.
+    # This attribute stores an encoded URL (e.g. spaces replaced with underscores).
+    for category in category_list:
+        category.url = category.name.replace(' ', '_')
+
+    for page in page_list:
+        page.url = page.title.replace(' ', '_')
+
+    # Render the response and return to the client.
     return render_to_response('rango/index.html', context_dict, context)
+
 
 def about(request):
     # return HttpResponse("This is the about page <p><a href='/rango'>Home Page</a>")
@@ -74,3 +79,11 @@ def category(request, category_name_url):
 
     # Go render the response and return it to the client.
     return render_to_response('rango/category.html', context_dict, context)
+
+def page(request, page_id):
+    context = RequestContext(request)
+    page_list = Page.objects.filter(id=page_id)
+
+    context_dict = {'pages': page_list}
+
+    return render_to_response('rango/page.html', context_dict, context)
